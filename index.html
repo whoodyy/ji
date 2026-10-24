@@ -1,0 +1,771 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Casa Julio · Villa</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --night:#252A1C;--night-2:#2D3323;--night-3:#353C2A;
+  --olive:#4A5A2C;--moss:#5D7040;
+  --gold:#BD9C62;--gold-hi:#D8BE88;
+  --cream:#EAE3D0;--sand:#D9D0BA;--muted:#9A9580;
+  --line:rgba(189,156,98,.22);
+  --serif:'Cormorant Garamond',Georgia,serif;--sans:'Inter',system-ui,sans-serif;
+  --pad:clamp(20px,5vw,64px);
+  --ease:cubic-bezier(.2,.7,.2,1);
+  --spring:cubic-bezier(.34,1.45,.64,1);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--night);color:var(--cream);font-family:var(--sans);font-weight:300;font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+body::before{content:"";position:fixed;inset:-20%;z-index:-1;pointer-events:none;background:radial-gradient(circle at 20% 30%,rgba(93,112,64,.22),transparent 45%),radial-gradient(circle at 80% 70%,rgba(189,156,98,.10),transparent 45%);animation:drift 22s ease-in-out infinite alternate}
+@keyframes drift{0%{transform:translate(0,0) scale(1)}100%{transform:translate(3%,-2%) scale(1.06)}}
+img{max-width:100%;display:block}
+h1,h2,h3{font-family:var(--serif);margin:0;line-height:1.08;font-weight:600}
+p{margin:0}
+button{font:inherit;cursor:pointer}
+a{color:inherit}
+:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
+
+.wrap{max-width:1180px;margin:0 auto;padding-inline:var(--pad)}
+.eyebrow{display:inline-flex;align-items:center;gap:12px;font-size:.72rem;letter-spacing:.3em;text-transform:uppercase;color:var(--gold);font-weight:500}
+.eyebrow::before{content:"";width:0;height:1px;background:var(--gold);transition:width .9s var(--ease) .2s}
+.in .eyebrow::before,.eyebrow.in::before{width:34px}
+
+/* scroll progress */
+#prog{position:fixed;top:0;left:0;height:2px;width:100%;transform:scaleX(0);transform-origin:0 50%;background:linear-gradient(90deg,var(--moss),var(--gold-hi));z-index:60}
+
+/* ===== loader ===== */
+#loader{position:fixed;inset:0;z-index:100;background:var(--night);display:grid;place-items:center;transition:opacity .8s ease,visibility .8s}
+#loader.done{opacity:0;visibility:hidden}
+.ld{display:grid;justify-items:center;gap:26px}
+.ld-word{font-family:var(--serif);font-size:clamp(2.6rem,8vw,4.4rem);font-weight:600;color:var(--gold-hi);letter-spacing:.04em;display:flex;white-space:pre}
+.ld-word span{display:inline-block;opacity:0;transform:translateY(.5em);animation:letterIn .8s var(--ease) forwards}
+.ld-bar{width:220px;height:1px;background:var(--line);overflow:hidden}
+.ld-bar i{display:block;height:100%;width:100%;background:linear-gradient(90deg,transparent,var(--gold),transparent);transform:scaleX(0);animation:fill 1.8s .3s var(--ease) forwards}
+.ld small{font-size:.66rem;letter-spacing:.34em;text-transform:uppercase;color:var(--muted);opacity:0;animation:fadeIn .6s 1.3s forwards}
+@keyframes letterIn{to{opacity:1;transform:none}}
+@keyframes fill{to{transform:scaleX(1)}}
+@keyframes fadeIn{to{opacity:1}}
+
+/* ===== header ===== */
+header{position:sticky;top:0;z-index:20;background:rgba(37,42,28,.86);border-bottom:1px solid var(--line);backdrop-filter:blur(10px);transition:background .4s,box-shadow .4s}
+header.scrolled{background:rgba(37,42,28,.96);box-shadow:0 10px 30px rgba(0,0,0,.18)}
+header .wrap{display:flex;align-items:center;justify-content:space-between;gap:14px;padding-block:14px;flex-wrap:wrap}
+.brand{font-family:var(--serif);font-size:1.6rem;font-weight:600;color:var(--gold-hi);text-decoration:none;letter-spacing:.03em;transition:letter-spacing .5s var(--ease)}
+.brand:hover{letter-spacing:.08em}
+nav{display:flex;gap:2px;overflow-x:auto;max-width:100%}
+nav a{position:relative;text-decoration:none;padding:8px 13px;font-size:.82rem;letter-spacing:.06em;white-space:nowrap;color:var(--sand);transition:color .3s}
+nav a::after{content:"";position:absolute;left:13px;right:13px;bottom:3px;height:1px;background:var(--gold);transform:scaleX(0);transform-origin:left;transition:transform .45s var(--ease)}
+nav a:hover{color:var(--gold-hi)}
+nav a:hover::after{transform:scaleX(1)}
+
+.btn{position:relative;overflow:hidden;display:inline-flex;align-items:center;justify-content:center;min-height:48px;padding:13px 28px;border-radius:2px;background:var(--gold);color:var(--night);text-decoration:none;font-weight:500;font-size:.78rem;letter-spacing:.18em;text-transform:uppercase;border:1px solid var(--gold);transition:background .35s,color .35s,transform .35s var(--ease),box-shadow .35s}
+.btn::before{content:"";position:absolute;top:0;left:-75%;width:50%;height:100%;background:linear-gradient(100deg,transparent,rgba(255,255,255,.35),transparent);transform:skewX(-20deg);transition:left .8s var(--ease)}
+.btn:hover{background:var(--gold-hi);border-color:var(--gold-hi);transform:translateY(-2px);box-shadow:0 12px 26px rgba(0,0,0,.25)}
+.btn:hover::before{left:125%}
+.btn.ghost{background:transparent;color:var(--cream);border-color:rgba(234,227,208,.45)}
+.btn.ghost:hover{background:rgba(234,227,208,.08);border-color:var(--cream);box-shadow:none}
+
+/* ===== hero ===== */
+.hero{position:relative;padding-block:clamp(56px,10vw,120px);background:radial-gradient(ellipse at 70% 30%,#353D27 0%,var(--night) 65%);overflow:hidden;border-bottom:1px solid var(--line)}
+.hero .wrap{display:grid;grid-template-columns:1.1fr 1fr;gap:clamp(28px,5vw,64px);align-items:center;position:relative;z-index:1}
+.leaf{position:absolute;pointer-events:none;opacity:.14;color:var(--moss);z-index:0}
+.leaf.l1{width:220px;top:8%;left:-40px;animation:float 9s ease-in-out infinite}
+.leaf.l2{width:160px;bottom:6%;right:6%;animation:float 11s ease-in-out infinite reverse}
+.leaf.l3{width:110px;top:45%;right:38%;opacity:.08;animation:float 13s ease-in-out infinite}
+@keyframes float{0%,100%{transform:translateY(0) rotate(0)}50%{transform:translateY(-18px) rotate(6deg)}}
+
+.up{opacity:0;transform:translateY(22px);animation:fadeUp 1.1s var(--ease) forwards}
+.d1{animation-delay:.2s}.d2{animation-delay:.4s}.d3{animation-delay:.6s}.d4{animation-delay:.8s}
+@keyframes fadeUp{to{opacity:1;transform:none}}
+.hero h1{font-size:clamp(3.2rem,7vw,6rem);color:var(--cream);margin:18px 0 22px;font-weight:500}
+.hero h1 .w{display:inline-block;opacity:0;transform:translateY(.4em);animation:wordIn .9s var(--ease) forwards}
+.hero h1 em{color:var(--gold-hi);font-style:italic}
+@keyframes wordIn{to{opacity:1;transform:none}}
+.lead{color:var(--sand);opacity:.85;max-width:48ch;font-size:1.05rem}
+.actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:30px}
+
+.logo-box{position:relative;justify-self:center;width:100%;max-width:440px;transition:transform .8s var(--ease)}
+.logo-box:hover{transform:translateY(-4px) rotate(-.6deg)}
+.logo-box .logo{width:100%;border-radius:4px;box-shadow:0 30px 70px rgba(0,0,0,.4);clip-path:inset(0 100% 0 0);animation:reveal 1.5s .5s var(--ease) forwards}
+@keyframes reveal{to{clip-path:inset(0 0 0 0)}}
+.draw{position:absolute;inset:-18px;width:calc(100% + 36px);height:calc(100% + 36px);overflow:visible;pointer-events:none}
+.draw *{fill:none;stroke:var(--gold);stroke-width:1.1;stroke-linecap:round;vector-effect:non-scaling-stroke;stroke-dasharray:1;stroke-dashoffset:1;animation:drawIt 2.4s var(--ease) forwards}
+.draw .l1{animation-delay:1.4s}
+.draw .l2{animation-delay:1.8s}
+.draw .l3{animation-delay:2.2s}
+@keyframes drawIt{to{stroke-dashoffset:0}}
+
+/* ===== marquee ===== */
+.strip{overflow:hidden;background:var(--night-2);border-bottom:1px solid var(--line)}
+.strip-track{display:flex;width:max-content;animation:marq 40s linear infinite;padding-block:16px}
+.strip-track span{font-family:var(--serif);font-size:1.25rem;color:var(--sand);opacity:.8;white-space:nowrap;padding-inline:22px}
+.strip-track span::after{content:"✦";color:var(--gold);margin-left:44px;font-size:.7rem;vertical-align:middle}
+@keyframes marq{to{transform:translateX(-50%)}}
+
+/* ===== stats ===== */
+.stats{background:var(--night-2);border-bottom:1px solid var(--line)}
+.stats .wrap{display:grid;grid-template-columns:repeat(4,1fr)}
+.stat{padding:36px 10px;text-align:center;border-right:1px solid var(--line);transition:background .4s}
+.stat:hover{background:var(--night-3)}
+.stat:last-child{border-right:0}
+.stat b{display:block;font-family:var(--serif);font-size:clamp(2.4rem,5vw,3.4rem);font-weight:500;color:var(--gold-hi);line-height:1}
+.stat span{display:block;margin-top:8px;font-size:.68rem;letter-spacing:.26em;text-transform:uppercase;color:var(--sand);opacity:.75}
+
+/* ===== sections ===== */
+.sec{padding-block:clamp(60px,9vw,110px);border-bottom:1px solid var(--line)}
+.sec h2{font-size:clamp(2.4rem,5vw,3.6rem);color:var(--cream);margin:12px 0 14px;font-weight:500}
+.sec h2 em{color:var(--gold-hi)}
+.sub{color:var(--sand);opacity:.72;max-width:60ch;margin-bottom:40px}
+
+/* reveal variants */
+.reveal{opacity:0;transition:opacity 1s ease,transform 1.1s var(--ease)}
+.reveal[data-r="up"]{transform:translateY(40px)}
+.reveal[data-r="left"]{transform:translateX(-50px)}
+.reveal[data-r="right"]{transform:translateX(50px)}
+.reveal[data-r="zoom"]{transform:scale(.94)}
+.reveal.in{opacity:1;transform:none}
+
+/* villa */
+.villa{display:grid;grid-template-columns:1fr 1fr;gap:clamp(28px,5vw,72px);align-items:center}
+.villa p{color:var(--sand);opacity:.8;font-size:1.02rem;margin-top:18px}
+.feat{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:28px}
+.feat div{border-top:1px solid var(--line);padding-top:14px;font-size:.92rem;color:var(--sand);transition:transform .5s var(--ease),border-color .5s}
+.feat div:hover{transform:translateY(-4px);border-color:var(--gold)}
+.feat b{display:block;font-family:var(--serif);font-size:1.4rem;color:var(--gold-hi);font-weight:500}
+
+/* rates */
+.rate-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.rate-card{background:var(--night-2);border:1px solid var(--line);padding:34px;display:grid;gap:10px;position:relative;overflow:hidden;transition:transform .5s var(--ease)}
+.rate-card::before{content:"";position:absolute;left:0;bottom:0;height:2px;width:100%;background:linear-gradient(90deg,var(--gold),var(--gold-hi));transform:scaleX(0);transform-origin:left;transition:transform .8s var(--ease)}
+.rate-card:hover{transform:translateY(-4px)}
+.rate-card:hover::before{transform:scaleX(1)}
+.rate-card .amt{font-family:var(--serif);font-size:3.6rem;color:var(--gold-hi);line-height:1;font-weight:500}
+.rate-card .per{color:var(--sand);opacity:.7}
+
+/* gallery */
+.gallery{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:18px}
+.tile{position:relative;aspect-ratio:4/3;border:1px solid var(--line);padding:0;overflow:hidden;background:var(--night-2);cursor:pointer;opacity:0;transform:translateY(30px) scale(.96);transition:opacity .8s var(--ease),transform .8s var(--ease),border-color .5s,box-shadow .5s}
+.tile.in{opacity:1;transform:none}
+.tile svg{width:100%;height:100%;display:block;transition:transform 1s var(--ease)}
+.tile:hover{border-color:var(--gold);box-shadow:0 18px 36px rgba(0,0,0,.25)}
+.tile:hover svg{transform:scale(1.07)}
+.tile span{position:absolute;left:14px;bottom:14px;background:rgba(37,42,28,.82);color:var(--gold-hi);font-size:.7rem;letter-spacing:.2em;text-transform:uppercase;padding:6px 12px;transform:translateY(6px);opacity:0;transition:all .5s var(--ease)}
+.tile:hover span{transform:none;opacity:1}
+
+dialog{border:1px solid var(--line);padding:0;background:var(--night-2);color:var(--cream);width:min(920px,calc(100% - 24px));max-height:calc(100dvh - 24px);animation:dlgIn .5s var(--ease)}
+dialog[open]{animation:dlgIn .5s var(--ease)}
+@keyframes dlgIn{from{opacity:0;transform:translateY(16px) scale(.98)}to{opacity:1;transform:none}}
+dialog::backdrop{background:rgba(20,23,15,.78);animation:fadeIn .4s}
+.lb{display:grid;gap:14px;padding:16px}
+.lb-art{width:100%;aspect-ratio:4/3;overflow:hidden}
+.lb-art svg{width:100%;height:100%;display:block;animation:fadeIn .5s}
+.lb-bar{display:flex;justify-content:space-between;align-items:center;gap:12px}
+.lb-bar button{width:46px;height:46px;border-radius:50%;border:1px solid var(--gold);background:transparent;color:var(--gold-hi);font-size:1.1rem;transition:background .3s,transform .3s var(--spring)}
+.lb-bar button:hover{background:rgba(189,156,98,.15);transform:scale(1.08)}
+.lb-cap{font-family:var(--serif);font-size:1.4rem;color:var(--gold-hi)}
+
+/* amenities */
+.amen{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:1px;background:var(--line);border:1px solid var(--line)}
+.amen-item{background:var(--night);padding:30px 26px;display:grid;gap:10px;transition:background .4s,transform .4s var(--ease)}
+.amen-item:hover{background:var(--night-2)}
+.amen-ico{width:46px;height:46px;border:1px solid var(--line);display:grid;place-items:center;transition:transform .6s var(--spring),border-color .4s,background .4s}
+.amen-item:hover .amen-ico{transform:rotate(-8deg) scale(1.08);border-color:var(--gold);background:rgba(189,156,98,.08)}
+.amen-ico svg{width:22px;height:22px;stroke:var(--gold);fill:none;stroke-width:1.4;stroke-linecap:round;stroke-linejoin:round}
+.amen-item h3{font-size:1.4rem;color:var(--cream)}
+.amen-item p{color:var(--sand);opacity:.7;font-size:.9rem}
+
+/* location */
+.loc{display:grid;grid-template-columns:1.2fr 1fr;border:1px solid var(--line);overflow:hidden}
+.loc-map{position:relative;min-height:380px;background:#2A3020}
+.loc-map svg{position:absolute;inset:0;width:100%;height:100%}
+.pin{transform-box:fill-box;transform-origin:center bottom;animation:bounce 2.2s var(--ease) infinite}
+@keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+.pulse{transform-box:fill-box;transform-origin:center;animation:pulse 2.4s ease-out infinite}
+@keyframes pulse{0%{transform:scale(.6);opacity:.7}100%{transform:scale(2.4);opacity:0}}
+.road{stroke-dasharray:10 10;animation:roadFlow 3s linear infinite}
+@keyframes roadFlow{to{stroke-dashoffset:-40}}
+.loc-info{padding:clamp(28px,4vw,48px);display:grid;gap:16px;align-content:center;background:var(--night-2)}
+.loc-info h3{font-size:2.4rem;color:var(--cream);font-weight:500}
+.loc-info p{color:var(--sand);opacity:.78}
+.loc-info .addr{font-family:var(--serif);font-size:1.3rem;color:var(--gold-hi)}
+.loc-info .actions{margin-top:6px}
+
+/* estimator */
+.est{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.panel{background:var(--night-2);border:1px solid var(--line);padding:30px;display:grid;gap:24px;align-content:start}
+.step{display:flex;justify-content:space-between;align-items:center;gap:12px;border-bottom:1px solid var(--line);padding-bottom:18px}
+.step:last-child{border-bottom:0;padding-bottom:0}
+.step .lab{font-size:.88rem;letter-spacing:.06em;color:var(--sand)}
+.step div{display:flex;align-items:center;gap:14px}
+.step button{width:44px;height:44px;border-radius:50%;border:1px solid var(--gold);background:transparent;font-size:1.2rem;color:var(--gold-hi);transition:background .3s,transform .3s var(--spring)}
+.step button:hover{background:rgba(189,156,98,.15)}
+.step button:active{transform:scale(.88)}
+.step output{font-family:var(--serif);font-size:2rem;min-width:2ch;text-align:center;color:var(--cream);display:inline-block;transition:transform .35s var(--spring)}
+.step output.bump{transform:scale(1.25)}
+.total{background:var(--olive);color:var(--cream);padding:36px;display:grid;gap:14px;align-content:start;position:relative;overflow:hidden}
+.total::after{content:"";position:absolute;right:-40px;bottom:-40px;width:160px;height:160px;border-radius:50%;border:1px solid rgba(234,227,208,.15);animation:spin 18s linear infinite}
+.total .mono{font-size:.7rem;letter-spacing:.3em;text-transform:uppercase;opacity:.75}
+.total .big{font-family:var(--serif);font-size:clamp(3rem,6vw,4.2rem);font-weight:600;line-height:1;color:var(--gold-hi)}
+.total .fine{font-size:.9rem;opacity:.85}
+.total .btn{background:var(--cream);color:var(--night);border-color:var(--cream);justify-self:start}
+.total .btn:hover{background:#fff;border-color:#fff}
+#copy-msg{font-size:.88rem;opacity:.9;min-height:1.2em}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* faq */
+.faq{max-width:840px;display:grid;gap:0;border-top:1px solid var(--line)}
+details{border-bottom:1px solid var(--line)}
+summary{cursor:pointer;padding:22px 4px;font-family:var(--serif);font-size:1.45rem;color:var(--cream);list-style:none;display:flex;justify-content:space-between;align-items:center;gap:14px;transition:color .3s,padding .4s var(--ease)}
+summary:hover{color:var(--gold-hi);padding-left:10px}
+summary::-webkit-details-marker{display:none}
+summary::after{content:"+";font-family:var(--sans);font-weight:300;color:var(--gold);font-size:1.6rem;transition:transform .45s var(--spring)}
+details[open] summary::after{transform:rotate(135deg)}
+details .a{padding:0 4px 22px;color:var(--sand);opacity:.78;max-width:68ch}
+details[open] .a{animation:fadeDown .5s var(--ease)}
+@keyframes fadeDown{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:none}}
+
+/* book */
+.book{position:relative;background:var(--olive);padding:clamp(40px,6vw,80px);display:grid;gap:18px;justify-items:start;overflow:hidden}
+.book::after{content:"";position:absolute;right:-70px;top:-70px;width:280px;height:280px;border:1px solid rgba(234,227,208,.18);border-radius:50%;animation:spin 30s linear infinite}
+.book::before{content:"";position:absolute;left:-60px;bottom:-60px;width:200px;height:200px;border:1px solid rgba(234,227,208,.12);border-radius:50%;animation:spin 24s linear infinite reverse}
+.book h2{font-size:clamp(2.6rem,5.5vw,4rem);color:var(--cream);font-weight:500;position:relative;z-index:1}
+.book p{color:var(--cream);opacity:.85;max-width:56ch;position:relative;z-index:1}
+.book .actions{position:relative;z-index:1}
+.book .btn{background:var(--gold);color:var(--night)}
+.book .btn.ghost{background:transparent;color:var(--cream);border-color:rgba(234,227,208,.55)}
+.book .btn.ghost:hover{background:rgba(234,227,208,.1)}
+
+footer{padding-block:34px;color:var(--muted);font-size:.8rem;letter-spacing:.06em;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
+
+@media (max-width:860px){
+  .hero .wrap,.villa,.est,.loc,.rate-grid{grid-template-columns:1fr}
+  .logo-box{max-width:340px}
+  .loc-map{min-height:260px}
+  .stats .wrap{grid-template-columns:repeat(2,1fr)}
+  .stat:nth-child(2){border-right:0}
+  .stat:nth-child(1),.stat:nth-child(2){border-bottom:1px solid var(--line)}
+  .leaf{display:none}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{transition:none!important;animation:none!important}
+  .up,.reveal,.tile{opacity:1;transform:none}
+  .logo-box .logo{clip-path:none}
+  .draw *{stroke-dashoffset:0}
+  .hero h1 .w,.ld-word span{opacity:1;transform:none}
+  .ld-bar i{transform:scaleX(1)}
+  .ld small{opacity:1}
+  #loader{display:none}
+}
+</style>
+</head>
+<body>
+
+<div id="prog"></div>
+
+<div id="loader" aria-hidden="true">
+  <div class="ld">
+    <div class="ld-word" id="ld-word"></div>
+    <div class="ld-bar"><i></i></div>
+    <small>Private villa</small>
+  </div>
+</div>
+
+<header id="hdr">
+  <div class="wrap">
+    <a class="brand" href="#top">Casa Julio</a>
+    <nav aria-label="Sections">
+      <a href="#villa">The villa</a>
+      <a href="#gallery">Gallery</a>
+      <a href="#rates">Rates</a>
+      <a href="#amenities">Amenities</a>
+      <a href="#location">Location</a>
+      <a href="#estimate">Estimate</a>
+      <a href="#faq">FAQ</a>
+      <a href="#book">Book</a>
+    </nav>
+  </div>
+</header>
+
+<main id="top">
+  <section class="hero">
+    <svg class="leaf l1" viewBox="0 0 200 200" aria-hidden="true"><path d="M100 10 C170 60 180 140 100 190 C20 140 30 60 100 10Z" fill="currentColor"/><path d="M100 30 L100 180" stroke="#252A1C" stroke-width="3"/></svg>
+    <svg class="leaf l2" viewBox="0 0 200 200" aria-hidden="true"><path d="M100 10 C170 60 180 140 100 190 C20 140 30 60 100 10Z" fill="currentColor"/><path d="M100 30 L100 180" stroke="#252A1C" stroke-width="3"/></svg>
+    <svg class="leaf l3" viewBox="0 0 200 200" aria-hidden="true"><path d="M100 10 C170 60 180 140 100 190 C20 140 30 60 100 10Z" fill="currentColor"/><path d="M100 30 L100 180" stroke="#252A1C" stroke-width="3"/></svg>
+    <div class="wrap">
+      <div>
+        <span class="eyebrow up d1">Thank you for your interest</span>
+        <h1 class="up d2" style="animation:none;opacity:1;transform:none"><span id="h1-words">Welcome to <em>Casa Julio</em></span></h1>
+        <p class="lead up d3">A private villa for up to 16 guests in Amaras Farm, Alfonso. Tell us your dates and how many guests are coming, and we will host you.</p>
+        <div class="actions up d4">
+          <a class="btn" href="#rates">View promo rates</a>
+          <a class="btn ghost" href="https://www.airbnb.com/h/casajulio" target="_blank" rel="noopener">Airbnb calendar</a>
+        </div>
+      </div>
+      <div class="logo-box">
+        <img class="logo" src="IMG_5295.JPG" alt="Casa Julio">
+        <svg class="draw" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+          <rect class="l1" x="1" y="1" width="98" height="98" rx="1" pathLength="1"/>
+          <path class="l2" pathLength="1" d="M99 2 C78 14 64 34 60 60"/>
+          <path class="l3" pathLength="1" d="M99 2 C86 8 70 14 52 26"/>
+        </svg>
+      </div>
+    </div>
+  </section>
+
+  <div class="strip" aria-hidden="true">
+    <div class="strip-track">
+      <span>Private villa</span><span>Amaras Farm</span><span>Up to 16 guests</span><span>4 rooms</span><span>8 beds</span><span>4 bathrooms</span><span>Promo rates</span>
+      <span>Private villa</span><span>Amaras Farm</span><span>Up to 16 guests</span><span>4 rooms</span><span>8 beds</span><span>4 bathrooms</span><span>Promo rates</span>
+    </div>
+  </div>
+
+  <section class="stats">
+    <div class="wrap">
+      <div class="stat"><b data-count="4">4</b><span>Rooms</span></div>
+      <div class="stat"><b data-count="8">8</b><span>Beds</span></div>
+      <div class="stat"><b data-count="4">4</b><span>Bathrooms</span></div>
+      <div class="stat"><b data-count="16">16</b><span>Guests</span></div>
+    </div>
+  </section>
+
+  <div class="wrap">
+    <section id="villa" class="sec reveal" data-r="up">
+      <div class="villa">
+        <div>
+          <span class="eyebrow">The villa</span>
+          <h2>Room for the <em>whole</em> family</h2>
+          <p>Casa Julio is a full villa with four rooms, eight beds and four bathrooms, made for family reunions, celebrations, and quiet weekends away. Everything is yours for your stay.</p>
+        </div>
+        <div>
+          <div class="feat">
+            <div><b>4 rooms</b>Separate sleeping spaces</div>
+            <div><b>8 beds</b>Comfortable for up to 16</div>
+            <div><b>4 bathrooms</b>Convenient for groups</div>
+            <div><b>Up to 16 pax</b>Plus extra beds for up to 20</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="gallery" class="sec reveal" data-r="up">
+      <span class="eyebrow">Gallery</span>
+      <h2>A look <em>inside</em></h2>
+      <p class="sub">Tap any drawing to enlarge it.</p>
+      <div class="gallery" id="gal"></div>
+    </section>
+
+    <section id="rates" class="sec reveal" data-r="zoom">
+      <span class="eyebrow">Promo rates</span>
+      <h2>Limited-time <em>offer</em></h2>
+      <p class="sub">Rates are for up to 16 guests, with a maximum of 20 guests using extra beds. Promo rates exclude peak seasons and holidays.</p>
+      <div class="rate-grid">
+        <div class="rate-card"><span class="eyebrow">Weekdays</span><div class="amt">₱17,000</div><span class="per">per night</span></div>
+        <div class="rate-card"><span class="eyebrow">Weekends</span><div class="amt">₱20,000</div><span class="per">per night</span></div>
+      </div>
+    </section>
+
+    <section id="amenities" class="sec reveal" data-r="right">
+      <span class="eyebrow">Amenities</span>
+      <h2>Everything <em>you need</em></h2>
+      <p class="sub">Replace these with the villa's real amenities.</p>
+      <div class="amen">
+        <div class="amen-item">
+          <span class="amen-ico"><svg viewBox="0 0 24 24"><path d="M2 9a15 15 0 0 1 20 0"/><path d="M5 12.5a10 10 0 0 1 14 0"/><path d="M8.5 16a5 5 0 0 1 7 0"/><circle cx="12" cy="19.5" r="1" fill="#BD9C62"/></svg></span>
+          <h3>Free Wi-Fi</h3>
+          <p>Stay connected for work or streaming.</p>
+        </div>
+        <div class="amen-item">
+          <span class="amen-ico"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="10" rx="2"/><path d="M8 20h8M12 14v6"/></svg></span>
+          <h3>Smart TV</h3>
+          <p>Streaming apps in the living area.</p>
+        </div>
+        <div class="amen-item">
+          <span class="amen-ico"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="6" rx="2"/><path d="M6 9v10M18 9v10M3 14h18"/></svg></span>
+          <h3>Air-conditioned rooms</h3>
+          <p>Cool, comfortable bedrooms for every guest.</p>
+        </div>
+        <div class="amen-item">
+          <span class="amen-ico"><svg viewBox="0 0 24 24"><rect x="3" y="8" width="18" height="6" rx="2"/><path d="M5 14v4M19 14v4M7 8V5h10v3"/></svg></span>
+          <h3>Extra beds</h3>
+          <p>Room for up to 20 guests when needed.</p>
+        </div>
+        <div class="amen-item">
+          <span class="amen-ico"><svg viewBox="0 0 24 24"><rect x="3" y="6" width="18" height="12" rx="2"/><path d="M8 6V4M12 6V4M16 6V4"/></svg></span>
+          <h3>Full kitchen</h3>
+          <p>Cook your own meals with the essentials.</p>
+        </div>
+        <div class="amen-item">
+          <span class="amen-ico"><svg viewBox="0 0 24 24"><path d="M3 11h18"/><path d="M5 11V8a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v3"/><path d="M5 11v5M19 11v5"/></svg></span>
+          <h3>Living and dining</h3>
+          <p>Space to gather, eat and unwind together.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="location" class="sec reveal" data-r="up">
+      <span class="eyebrow">Location</span>
+      <h2>Find your <em>way</em></h2>
+      <p class="sub">Tucked away in the countryside, a short drive from the main road.</p>
+      <div class="loc">
+        <div class="loc-map" aria-hidden="true">
+          <svg viewBox="0 0 500 380" preserveAspectRatio="xMidYMid slice">
+            <rect width="500" height="380" fill="#2A3020"/>
+            <path d="M0 80 Q120 60 220 110 T500 90" fill="none" stroke="#353C2A" stroke-width="26"/>
+            <path d="M0 300 Q140 260 260 290 T500 270" fill="none" stroke="#353C2A" stroke-width="20"/>
+            <path class="road" d="M120 0 Q150 160 110 380" fill="none" stroke="#4A5A2C" stroke-width="3"/>
+            <path class="road" d="M340 0 Q310 180 380 380" fill="none" stroke="#4A5A2C" stroke-width="3"/>
+            <path d="M0 200 L500 160" fill="none" stroke="#BD9C62" stroke-width="1.5" stroke-dasharray="6 6" opacity=".4"/>
+            <g fill="#313829" stroke="#BD9C62" stroke-opacity=".2">
+              <rect x="30" y="130" width="70" height="50" rx="3"/>
+              <rect x="150" y="150" width="60" height="40" rx="3"/>
+              <rect x="400" y="30" width="70" height="40" rx="3"/>
+              <rect x="410" y="200" width="60" height="50" rx="3"/>
+            </g>
+            <circle class="pulse" cx="250" cy="190" r="18" fill="#BD9C62"/>
+            <circle cx="250" cy="190" r="40" fill="#BD9C62" opacity=".1"/>
+            <g class="pin">
+              <path d="M250 214 C236 190 236 172 250 172 C264 172 264 190 250 214Z" fill="#D8BE88" stroke="#252A1C" stroke-width="2"/>
+              <circle cx="250" cy="186" r="4.5" fill="#252A1C"/>
+            </g>
+          </svg>
+        </div>
+        <div class="loc-info">
+          <span class="eyebrow">Casa Julio</span>
+          <h3>Amaras Farm</h3>
+          <div class="addr">Barangay Sinaliw, Malaki<br>Alfonso</div>
+          <p>Use the button below to open the exact location and get directions from where you are.</p>
+          <div class="actions">
+            <a class="btn" href="https://www.google.com/maps/search/?api=1&amp;query=Amaras+Farm+Barangay+Sinaliw+Malaki+Alfonso" target="_blank" rel="noopener">Open in Google Maps</a>
+            <a class="btn ghost" href="https://www.google.com/maps/dir/?api=1&amp;destination=Amaras+Farm+Barangay+Sinaliw+Malaki+Alfonso" target="_blank" rel="noopener">Get directions</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="estimate" class="sec reveal" data-r="up">
+      <span class="eyebrow">Estimate</span>
+      <h2>Plan your <em>stay</em></h2>
+      <p class="sub">Choose the number of nights and guests to see an estimate. The host confirms the final price.</p>
+      <div class="est">
+        <div class="panel">
+          <div class="step"><span class="lab">Weekday nights</span>
+            <div><button type="button" data-k="wd" data-d="-1" aria-label="Fewer weekday nights">−</button><output id="o-wd" aria-live="polite">2</output><button type="button" data-k="wd" data-d="1" aria-label="More weekday nights">+</button></div></div>
+          <div class="step"><span class="lab">Weekend nights</span>
+            <div><button type="button" data-k="we" data-d="-1" aria-label="Fewer weekend nights">−</button><output id="o-we" aria-live="polite">0</output><button type="button" data-k="we" data-d="1" aria-label="More weekend nights">+</button></div></div>
+          <div class="step"><span class="lab">Guests</span>
+            <div><button type="button" data-k="g" data-d="-1" aria-label="Fewer guests">−</button><output id="o-g" aria-live="polite">4</output><button type="button" data-k="g" data-d="1" aria-label="More guests">+</button></div></div>
+        </div>
+        <div class="total" aria-live="polite">
+          <span class="mono">Estimated total</span>
+          <div class="big" id="t-big">₱0</div>
+          <div class="fine" id="t-l"></div>
+          <p class="fine" id="t-note"></p>
+          <button class="btn" id="copy" type="button">Copy message to ask for dates</button>
+          <p id="copy-msg" role="status"></p>
+        </div>
+      </div>
+    </section>
+
+    <section id="faq" class="sec reveal" data-r="left">
+      <span class="eyebrow">Questions</span>
+      <h2>Good to <em>know</em></h2>
+      <p class="sub">Can't find your answer? Send us a message and we will reply.</p>
+      <div class="faq">
+        <details open><summary>What are the promo rates?</summary><div class="a">Weekdays are ₱17,000 per night and weekends are ₱20,000 per night. These are limited-time promo rates.</div></details>
+        <details><summary>How many guests can stay?</summary><div class="a">The villa fits up to 16 guests across 8 beds in 4 rooms. A maximum of 20 guests can stay using extra beds. For 17 to 20 guests, message the host to confirm the rate.</div></details>
+        <details><summary>Do promo rates apply during holidays?</summary><div class="a">No. Promo rates exclude peak seasons and holidays. Ask the host for the price of those dates.</div></details>
+        <details><summary>How do I get there?</summary><div class="a">The villa is in Amaras Farm, Barangay Sinaliw, Malaki, Alfonso. Use the Google Maps button in the location section for directions.</div></details>
+        <details><summary>How can I check availability?</summary><div class="a">Open our Airbnb calendar to see open dates and current rates. You can also send us your preferred dates directly.</div></details>
+        <details><summary>How do I book?</summary><div class="a">Send your dates and number of guests through Airbnb or Facebook. The host confirms availability before you pay.</div></details>
+      </div>
+    </section>
+
+    <section id="book" class="sec reveal" data-r="zoom" style="border-bottom:0">
+      <div class="book">
+        <span class="eyebrow" style="color:var(--gold-hi)">Reserve your stay</span>
+        <h2>What dates are <em style="color:var(--gold-hi)">you</em> planning?</h2>
+        <p>Send us your dates and how many guests will be coming. We would love to host you at Casa Julio.</p>
+        <div class="actions">
+          <a class="btn" href="https://www.airbnb.com/h/casajulio" target="_blank" rel="noopener">View Airbnb calendar</a>
+          <a class="btn ghost" id="fb" href="#" target="_blank" rel="noopener">Message us on Facebook</a>
+        </div>
+      </div>
+    </section>
+  </div>
+</main>
+
+<div class="wrap"><footer><span>Casa Julio · Amaras Farm, Barangay Sinaliw, Malaki, Alfonso</span><span>Promo rates exclude peak seasons and holidays</span></footer></div>
+
+<dialog id="lb" aria-label="Drawing viewer">
+  <div class="lb">
+    <div class="lb-art" id="lb-art"></div>
+    <div class="lb-bar">
+      <button type="button" id="lb-prev" aria-label="Previous drawing">←</button>
+      <span class="lb-cap" id="lb-cap"></span>
+      <button type="button" id="lb-next" aria-label="Next drawing">→</button>
+    </div>
+  </div>
+</dialog>
+
+<script>
+/* ===== EDIT HERE ===== */
+var FB_URL="#";            /* paste your Facebook page link here */
+var WEEKDAY=17000, WEEKEND=20000;
+var BASE_GUESTS=16, MAX_GUESTS=20;
+
+var GALLERY=[
+ {t:"Living area", art:`<svg viewBox="0 0 400 300">
+   <rect width="400" height="300" fill="#303727"/>
+   <rect x="0" y="235" width="400" height="65" fill="#3A4330"/>
+   <rect x="36" y="46" width="104" height="120" rx="6" fill="#DDD5BE" stroke="#BD9C62" stroke-width="4"/>
+   <line x1="88" y1="46" x2="88" y2="166" stroke="#BD9C62" stroke-width="3"/>
+   <line x1="36" y1="106" x2="140" y2="106" stroke="#BD9C62" stroke-width="3"/>
+   <ellipse cx="220" cy="262" rx="150" ry="14" fill="#BD9C62" opacity=".25"/>
+   <rect x="150" y="186" width="200" height="58" rx="14" fill="#4A5A2C"/>
+   <rect x="138" y="160" width="224" height="42" rx="16" fill="#5D7040"/>
+   <rect x="128" y="176" width="26" height="46" rx="10" fill="#5D7040"/>
+   <rect x="336" y="176" width="26" height="46" rx="10" fill="#5D7040"/>
+   <rect x="170" y="168" width="40" height="22" rx="8" fill="#D8BE88"/>
+   <rect x="250" y="168" width="40" height="22" rx="8" fill="#BD9C62"/>
+   <line x1="372" y1="112" x2="372" y2="190" stroke="#BD9C62" stroke-width="4"/>
+   <path d="M352 112 L392 112 L384 88 L360 88Z" fill="#D8BE88"/>
+ </svg>`},
+ {t:"Bedroom", art:`<svg viewBox="0 0 400 300">
+   <rect width="400" height="300" fill="#2A3022"/>
+   <rect x="0" y="240" width="400" height="60" fill="#3A4330"/>
+   <rect x="110" y="70" width="180" height="110" rx="10" fill="#BD9C62" opacity=".75"/>
+   <rect x="80" y="170" width="240" height="60" rx="8" fill="#DDD5BE"/>
+   <rect x="92" y="158" width="216" height="34" rx="12" fill="#4A5A2C"/>
+   <rect x="124" y="142" width="70" height="24" rx="12" fill="#EFEADB"/>
+   <rect x="206" y="142" width="70" height="24" rx="12" fill="#EFEADB"/>
+   <rect x="52" y="190" width="18" height="60" fill="#BD9C62"/>
+   <rect x="330" y="190" width="18" height="60" fill="#BD9C62"/>
+   <circle cx="62" cy="136" r="16" fill="#D8BE88"/>
+   <circle cx="339" cy="136" r="16" fill="#D8BE88"/>
+   <path d="M360 40 Q340 60 350 90 Q372 66 360 40Z" fill="#5D7040" opacity=".6"/>
+ </svg>`},
+ {t:"Dining", art:`<svg viewBox="0 0 400 300">
+   <rect width="400" height="300" fill="#2D3424"/>
+   <rect x="0" y="240" width="400" height="60" fill="#3A4330"/>
+   <line x1="130" y1="0" x2="130" y2="70" stroke="#BD9C62" stroke-width="3"/>
+   <line x1="200" y1="0" x2="200" y2="95" stroke="#BD9C62" stroke-width="3"/>
+   <line x1="270" y1="0" x2="270" y2="70" stroke="#BD9C62" stroke-width="3"/>
+   <path d="M112 90 Q130 70 148 90 Z" fill="#D8BE88"/>
+   <path d="M182 110 Q200 90 218 110 Z" fill="#D8BE88"/>
+   <path d="M252 90 Q270 70 288 90 Z" fill="#D8BE88"/>
+   <ellipse cx="200" cy="180" rx="130" ry="36" fill="#7E6240"/>
+   <ellipse cx="200" cy="172" rx="130" ry="30" fill="#BD9C62"/>
+   <rect x="180" y="132" width="40" height="14" rx="6" fill="#DDD5BE"/>
+   <rect x="100" y="206" width="30" height="26" rx="8" fill="#4A5A2C"/>
+   <rect x="270" y="206" width="30" height="26" rx="8" fill="#4A5A2C"/>
+   <rect x="165" y="222" width="30" height="26" rx="8" fill="#4A5A2C"/>
+ </svg>`},
+ {t:"Kitchen", art:`<svg viewBox="0 0 400 300">
+   <rect width="400" height="300" fill="#303727"/>
+   <rect x="20" y="40" width="360" height="90" rx="8" fill="#BD9C62"/>
+   <rect x="34" y="56" width="78" height="58" rx="5" fill="#A38450"/>
+   <rect x="122" y="56" width="78" height="58" rx="5" fill="#A38450"/>
+   <rect x="210" y="56" width="78" height="58" rx="5" fill="#A38450"/>
+   <rect x="298" y="56" width="68" height="58" rx="5" fill="#A38450"/>
+   <rect x="0" y="150" width="400" height="20" fill="#DDD5BE"/>
+   <rect x="20" y="170" width="360" height="120" fill="#4A5A2C"/>
+   <rect x="34" y="186" width="78" height="92" rx="5" fill="#5D7040"/>
+   <rect x="122" y="186" width="78" height="92" rx="5" fill="#5D7040"/>
+   <rect x="210" y="186" width="78" height="92" rx="5" fill="#5D7040"/>
+   <rect x="298" y="186" width="68" height="92" rx="5" fill="#5D7040"/>
+ </svg>`},
+ {t:"Pool & outdoor", art:`<svg viewBox="0 0 400 300">
+   <defs><linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#353D28"/><stop offset="1" stop-color="#2A3022"/></linearGradient></defs>
+   <rect width="400" height="300" fill="url(#sky)"/>
+   <circle cx="320" cy="70" r="30" fill="#D8BE88" opacity=".7"/>
+   <rect x="0" y="190" width="400" height="110" fill="#2D3424"/>
+   <rect x="60" y="200" width="280" height="80" rx="10" fill="#4F6E69" stroke="#7FA39D" stroke-width="3"/>
+   <path d="M80 230 Q100 222 120 230 T160 230 T200 230 T240 230 T280 230 T320 230" fill="none" stroke="#DDD5BE" stroke-width="3" opacity=".5"/>
+   <rect x="50" y="190" width="300" height="8" fill="#DDD5BE"/>
+   <rect x="36" y="110" width="10" height="90" fill="#7E6240"/>
+   <path d="M41 110 Q10 90 2 110 Q20 96 41 110Z" fill="#4A5A2C"/>
+   <path d="M41 110 Q70 92 82 108 Q60 102 41 110Z" fill="#4A5A2C"/>
+   <rect x="360" y="120" width="9" height="80" fill="#7E6240"/>
+   <path d="M364 120 Q340 100 332 118 Q350 108 364 120Z" fill="#4A5A2C"/>
+   <path d="M364 120 Q388 102 396 120 Q380 112 364 120Z" fill="#5D7040"/>
+ </svg>`},
+ {t:"Exterior", art:`<svg viewBox="0 0 400 300">
+   <rect width="400" height="300" fill="#262C1E"/>
+   <circle cx="110" cy="70" r="26" fill="#D8BE88" opacity=".55"/>
+   <rect x="0" y="250" width="400" height="50" fill="#2D3424"/>
+   <rect x="60" y="80" width="280" height="172" fill="#DDD5BE" stroke="#BD9C62" stroke-width="3"/>
+   <rect x="100" y="120" width="90" height="130" fill="#7E6240"/>
+   <g stroke="#5A4630" stroke-width="2">
+     <line x1="100" y1="136" x2="190" y2="136"/><line x1="100" y1="152" x2="190" y2="152"/>
+     <line x1="100" y1="168" x2="190" y2="168"/><line x1="100" y1="184" x2="190" y2="184"/>
+     <line x1="100" y1="200" x2="190" y2="200"/><line x1="100" y1="216" x2="190" y2="216"/>
+     <line x1="100" y1="232" x2="190" y2="232"/>
+   </g>
+   <rect x="230" y="120" width="90" height="130" fill="#7E6240"/>
+   <g stroke="#5A4630" stroke-width="2">
+     <line x1="230" y1="136" x2="320" y2="136"/><line x1="230" y1="152" x2="320" y2="152"/>
+     <line x1="230" y1="168" x2="320" y2="168"/><line x1="230" y1="184" x2="320" y2="184"/>
+     <line x1="230" y1="200" x2="320" y2="200"/><line x1="230" y1="216" x2="320" y2="216"/>
+     <line x1="230" y1="232" x2="320" y2="232"/>
+   </g>
+   <rect x="180" y="40" width="40" height="30" fill="#D8BE88"/>
+   <path d="M370 250 L370 120 Q360 100 372 90" fill="none" stroke="#7E6240" stroke-width="6"/>
+   <path d="M372 90 Q340 70 330 92 Q352 84 372 90Z" fill="#4A5A2C"/>
+   <path d="M372 90 Q396 70 402 92 Q386 84 372 90Z" fill="#5D7040"/>
+ </svg>`}
+];
+
+var $=function(s){return document.querySelector(s)};
+var peso=function(n){return "₱"+Number(n).toLocaleString("en-PH")};
+var reduce=window.matchMedia&&window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+/* loader */
+$("#ld-word").innerHTML="Casa Julio".split("").map(function(c,i){
+  return '<span style="animation-delay:'+(0.1+i*0.08)+'s">'+(c==" "?"&nbsp;":c)+'</span>';
+}).join("");
+setTimeout(function(){$("#loader").classList.add("done")},2800);
+
+/* hero headline: split into words and stagger */
+(function(){
+  var h=$("#h1-words");
+  var html=h.innerHTML.replace(/<em>/g,"\u0001").replace(/<\/em>/g,"\u0002");
+  var words=html.split(" ").map(function(w,i){
+    var em=w.indexOf("\u0001")>-1, txt=w.replace(/\u0001|\u0002/g,"");
+    return '<span class="w" style="animation-delay:'+(0.5+i*0.12)+'s">'+(em?'<em>'+txt+'</em>':txt)+'</span>';
+  });
+  h.innerHTML=words.join(" ");
+})();
+
+/* header shadow on scroll + progress bar */
+var hdr=$("#hdr"), prog=$("#prog");
+window.addEventListener("scroll",function(){
+  var h=document.documentElement, max=h.scrollHeight-h.clientHeight;
+  prog.style.transform="scaleX("+(max>0?h.scrollTop/max:0)+")";
+  hdr.classList.toggle("scrolled",h.scrollTop>10);
+},{passive:true});
+
+/* gallery */
+$("#gal").innerHTML=GALLERY.map(function(p,i){
+  return '<button class="tile" type="button" data-i="'+i+'" style="transition-delay:'+(i*0.1)+'s" aria-label="Open drawing: '+p.t+'">'+p.art+'<span>'+p.t+'</span></button>';
+}).join("");
+var gi=0;
+function showLb(i){
+  gi=(i+GALLERY.length)%GALLERY.length;
+  $("#lb-art").innerHTML=GALLERY[gi].art;
+  $("#lb-cap").textContent=GALLERY[gi].t+" · "+(gi+1)+" / "+GALLERY.length;
+}
+$("#gal").onclick=function(e){
+  var t=e.target.closest(".tile");
+  if(t){showLb(+t.dataset.i);$("#lb").showModal()}
+};
+$("#lb-prev").onclick=function(){showLb(gi-1)};
+$("#lb-next").onclick=function(){showLb(gi+1)};
+$("#lb").addEventListener("click",function(e){if(e.target===$("#lb"))$("#lb").close()});
+$("#lb").addEventListener("keydown",function(e){
+  if(e.key=="ArrowRight")showLb(gi+1);
+  if(e.key=="ArrowLeft")showLb(gi-1);
+});
+
+/* rate and amenity stagger */
+document.querySelectorAll(".rate-card").forEach(function(c,i){c.style.transitionDelay=(i*0.15)+"s"});
+document.querySelectorAll(".amen-item").forEach(function(c,i){c.style.transitionDelay=((i%3)*0.1)+"s"});
+
+/* estimator */
+var st={wd:2, we:0, g:4};
+var lastRoom=0;
+function tween(el,from,to){
+  if(reduce){el.textContent=peso(to);return}
+  var start=null, dur=600;
+  function step(t){
+    if(!start) start=t;
+    var p=Math.min(1,(t-start)/dur), e=1-Math.pow(1-p,3);
+    el.textContent=peso(Math.round(from+(to-from)*e));
+    if(p<1) requestAnimationFrame(step);
+  }
+  requestAnimationFrame(step);
+}
+function bump(el){el.classList.remove("bump");void el.offsetWidth;el.classList.add("bump");setTimeout(function(){el.classList.remove("bump")},300)}
+function est(){
+  var room=st.wd*WEEKDAY+st.we*WEEKEND;
+  var nights=st.wd+st.we;
+  $("#o-wd").textContent=st.wd;
+  $("#o-we").textContent=st.we;
+  $("#o-g").textContent=st.g;
+  tween($("#t-big"),lastRoom,room);
+  lastRoom=room;
+  $("#t-l").textContent=nights+" night"+(nights==1?"":"s")+" · "+st.g+" guest"+(st.g==1?"":"s");
+  $("#t-note").textContent = st.g>BASE_GUESTS
+    ? "Above 16 guests uses extra beds. Message the host to confirm the rate."
+    : "Estimate only. Peak seasons and holidays are not included in promo rates.";
+  return room;
+}
+document.querySelectorAll("[data-k]").forEach(function(b){
+  b.onclick=function(){
+    var k=b.dataset.k, d=+b.dataset.d;
+    var min=k=="g"?1:0, max=k=="g"?MAX_GUESTS:30;
+    st[k]=Math.min(max,Math.max(min,st[k]+d));
+    bump($("#o-"+k));
+    est();
+  };
+});
+$("#copy").onclick=function(){
+  var room=est();
+  var msg="Hi! I'd like to inquire about Casa Julio villa. "+st.wd+" weekday night"+(st.wd==1?"":"s")+" and "+st.we+" weekend night"+(st.we==1?"":"s")+" for "+st.g+" guest"+(st.g==1?"":"s")+". Estimated total "+peso(room)+" at promo rates. My dates are ____. Is it available?";
+  var done=function(){$("#copy-msg").textContent="Copied. Paste it in your message to the host."};
+  var fail=function(){$("#copy-msg").textContent=msg};
+  try{navigator.clipboard.writeText(msg).then(done,fail)}catch(e){fail()}
+};
+$("#fb").href=FB_URL;
+est();
+
+/* count-up stats */
+function countUp(el){
+  var to=+el.dataset.count;
+  if(reduce){el.textContent=to;return}
+  var start=null, dur=1400;
+  function step(t){
+    if(!start) start=t;
+    var p=Math.min(1,(t-start)/dur), e=1-Math.pow(1-p,3);
+    el.textContent=Math.round(to*e);
+    if(p<1) requestAnimationFrame(step);
+  }
+  requestAnimationFrame(step);
+}
+
+/* scroll reveals */
+var io=new IntersectionObserver(function(entries){
+  entries.forEach(function(en){
+    if(en.isIntersecting){
+      en.target.classList.add("in");
+      io.unobserve(en.target);
+    }
+  });
+},{threshold:.15});
+document.querySelectorAll(".reveal").forEach(function(el){io.observe(el)});
+
+var statsEl=document.querySelector(".stats");
+var sio=new IntersectionObserver(function(entries){
+  entries.forEach(function(en){
+    if(en.isIntersecting){statsEl.querySelectorAll("[data-count]").forEach(countUp);sio.disconnect()}
+  });
+},{threshold:.4});
+sio.observe(statsEl);
+
+var tio=new IntersectionObserver(function(entries){
+  entries.forEach(function(en){
+    if(en.isIntersecting){
+      en.target.querySelectorAll(".tile").forEach(function(t){t.classList.add("in")});
+      tio.unobserve(en.target);
+    }
+  });
+},{threshold:.15});
+tio.observe($("#gal"));
+</script>
+</body>
+</html>
